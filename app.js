@@ -1,18 +1,19 @@
-const http = require('http');
+const express = require('express');
+const bodyParser= require('body-parser');
 
+const app = express();
 
-const server = http.createServer((req, res) => {
-    console.log(req.url, req.headers);
-    process.exit;
+const adminRoutes = require('./routes/admin');
 
-    res.setHeader('Content-Type', 'text/html');
-    res.write('<html>');
-    res.write('<head><title> My first page</title><head>');
-    res.write('<body><h1> Welcome to jhays page</h1></body>');
-    res.write('</html>');
-    res.end();
-    
+const shopRoute = require('./routes/shop');
 
+app.use(bodyParser.urlencoded({extended: false}));
+
+app.use('/admin', adminRoutes);
+app.use(shopRoute);
+
+app.use((req, res, next) => {
+    res.status(404).send("<h2>Page not found</h2>")
 });
 
-server.listen(3000);
+app.listen(3000);
